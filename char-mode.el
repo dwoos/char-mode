@@ -23,3 +23,20 @@ representing RPG characters as org-mode files"
             (delete-region p1 p2)
             (insert (shell-command-to-string (concat roll-program " " acdice)))))
       (shell-command (concat roll-program " " dice)))))
+
+(defun score-to-mod (n)
+  (let ((d (- n 10)))
+    (cond
+     ((< d 0) (/ (- d 1) 2))
+     (t (/ d 2)))))
+
+(defun recalc-all-org-tables ()
+  (interactive)
+  (save-excursion
+    (beginning-of-buffer)
+    (let ((s (search-forward "#+TBLNAME" nil t)))
+      (while s
+        (next-line)
+        (org-table-recalculate '(16))
+        (setq s (search-forward "#+TBLNAME" nil t))))))
+        
